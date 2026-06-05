@@ -1,0 +1,25 @@
+<!-- Main Site -->
+<main>
+  <div class="indexTopBar">
+    <img src="img/SE-GitHub-image.png" alt="Huskie Code Logo" />
+    <h1>Employability Competencies Journal</h1>
+    <a href="/createEntry" role="button">Create Entry</a>
+  </div>
+
+  <div class="entries">
+    <% for(let entry of entries) { %>
+    <div class="entry">
+      <div><%= entry.date %></div>
+      <div class="entryCompetency"><%= entry.competency %></div>
+      <div class="entryContent"><%= entry.content %></div>
+      <div>
+        <a href="/editEntry/<%= entry.id %>" role="button" class="secondary">
+          Edit
+        </a>
+      </div>
+    </div>
+    <% } %>
+  </div>
+</main>
+
+<!-- /Main Site -->

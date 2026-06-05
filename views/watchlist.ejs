@@ -1,0 +1,39 @@
+   <!-- include the header -->
+<%- include('include/_header') %>
+<!-- /include header-->
+
+<!-- Main Site -->
+<main>
+  <h1>Employability Competencies Journal</h1>
+
+  <div>
+    <label>Date <input type="date" class="date" /> </label>
+    <fieldset>
+      <legend>
+        Employability Competencies <% for(let competency of comps) { %>
+        <label>
+          <input
+            type="radio"
+            class="competency"
+            name="competency"
+            value="<%= competency %>"
+          />
+          <%= competency %>
+        </label>
+        <% } %>
+      </legend>
+    </fieldset>
+    <label
+      >Journal Entry <textarea class="content"> my journal entry</textarea>
+    </label>
+    <input type="submit" class="submit" value="submit" />
+  </div>
+</main>
+
+<!-- /Main Site -->
+
+<script src="/js/createEntry.js"></script>
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+<!-- /include footer -->
