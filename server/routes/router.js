@@ -1,53 +1,82 @@
 const express = require("express");
 const route = express.Router();
 const Entry = require("../model/entry");
-//FIXME: need to completely modify this code to fit the watchlist code instead of the watchlist code, but this is a good starting point for the CRUD operations
 
-// easy way to assign static data to a variable
-
-// pass a path (e.g., "/") and a callback function to the get method
-//  when the client makes an HTTP GET request to the specified path,
-//  the callback function is executed
-// so if you type http://localhost:8080/ then the following code will run
+// Home page - render index (you can customize as needed)
 route.get("/", async (req, res) => {
-  // the req parameter references the HTTP request object, which has
-  //  a number of properties
-  console.log("path: ", req.path); // will be shown on the server not on chrome
-
-  //  convert MongoDB objects to objects formatted for the EJS template
-  const formattedEntries = entries.map((entry) => {
-    return {
-      id: entry._id,
-      date: entry.date.toLocaleDateString(),
-      title: entry.title,
-      content: entry.content.slice(0, 20) + "...",
-    };
-  });
-
-  // the res parameter references the HTTP response object
-  res.render("index", { entries: formattedEntries }); // will be shown on the client side (chrome or your web-browser)
+  try {
+    const entries = await Entry.find().lean();
+    res.render("index", { entries });
+  } catch (err) {
+    console.error('Error fetching entries for index', err);
+    res.status(500).send('Server error');
+  }
 });
 
-route.get("/watchlist", (req, res) => {
-  res.render("watchlist");
+// Watchlist page - render entries that are not viewed
+route.get("/watchlist", async (req, res) => {
+  try {
+    const entries = await Entry.find({ viewed: { $ne: true } }).lean();
+    res.render("watchlist", { entries });
+  } catch (err) {
+    console.error('Error fetching watchlist', err);
+    res.status(500).send('Server error');
+  }
 });
 
+// Create a new entry. Accept multiple possible client field names and
+// map them to the schema fields (watchlist, content, email, date)
 route.post("/createEntry", async (req, res) => {
-  const entry = new Entry({
-    // When the time zone offset is absent, date-only forms are interpreted as
-    //  a UTC time and date-time forms are interpreted as a local time. We want
-    //  the date object to reflect local time; so, add a time of midnight.
-    date: new Date(req.body.date + "T00:00:00"),
-    title: req.body.title,
-    content: req.body.content,
-  });
-  await entry.save();
+  try {
+    const watchlistName = req.body.watchlist || req.body.title || req.body.dramaName || "";
+    const content = req.body.content || req.body.comments || "";
+    const dateVal = req.body.date || new Date().toISOString().split("T")[0];
 
-  res.status(201).end();
+    const entry = new Entry({
+      date: new Date(dateVal + "T00:00:00"),
+      email: req.body.email || "anonymous@example.com",
+      watchlist: watchlistName,
+      content,
+    });
+
+    await entry.save();
+    res.status(201).json({ id: entry._id });
+  } catch (err) {
+    console.error('Error creating entry', err);
+    res.status(500).send('Server error');
+  }
 });
 
-//need to add routes for when another drama is checked off the watchlist, it is deleted from the watchlist, and added to the already watched list, and when a drama is added to the watchlist. 
-//maybe in the future add a note/ drama review section for each drama in the already watched list, but that is not a priority right now
+// Update an existing entry by id (used by edit modal). Accepts same
+// field shapes as create and only sets fields present in the request.
+route.put('/entry/:id', async (req, res) => {
+  const update = {};
+  if (req.body.watchlist || req.body.title || req.body.dramaName) {
+    update.watchlist = req.body.watchlist || req.body.title || req.body.dramaName;
+  }
+  if (req.body.content || req.body.comments) update.content = req.body.content || req.body.comments;
+  if (typeof req.body.viewed !== 'undefined') update.viewed = req.body.viewed;
+  if (req.body.date) update.date = new Date(req.body.date + 'T00:00:00');
 
+  try {
+    const updated = await Entry.findByIdAndUpdate(req.params.id, update, { new: true });
+    if (!updated) return res.sendStatus(404);
+    res.sendStatus(200);
+  } catch (err) {
+    console.error('Error updating entry', err);
+    res.sendStatus(500);
+  }
+});
+
+// Already-watched page - render entries marked viewed
+route.get('/alreadyWatchlist', async (req, res) => {
+  try {
+    const entries = await Entry.find({ viewed: true }).lean();
+    res.render('alreadyWatchlist', { entries });
+  } catch (err) {
+    console.error('Error fetching alreadyWatchlist', err);
+    res.status(500).send('Server error');
+  }
+});
 
 module.exports = route;
