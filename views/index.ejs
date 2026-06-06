@@ -1,25 +1,20 @@
-<!-- Main Site -->
-<main>
-  <div class="indexTopBar">
-    <img src="img/SE-GitHub-image.png" alt="Huskie Code Logo" />
-    <h1> Watchlist</h1>
-    <a href="/createEntry" role="button">Create Entry</a>
-  </div>
+<%- include('include/_header') %>
 
-  <div class="entries">
-    <% for(let entry of entries) { %>
-    <div class="entry">
-      <div><%= entry.date %></div>
-      <div class="entryWatchlist"><%= entry.watchlist %></div>
-      <div class="entryContent"><%= entry.content %></div>
-      <div>
-        <a href="/editEntry/<%= entry.id %>" role="button" class="secondary">
-          Edit
-        </a>
-      </div>
-    </div>
-    <% } %>
-  </div>
+<main>
+  <h1>Welcome to the Watchlist! 🎬✨</h1>
+  <p>
+    Hola amigos! 👋 I am DK and this is my watchlist for K/C Dramas.
+    <br /> I will be updating this watchlist as I watch more dramas and add
+    more entries. Stay tuned for more updates! ✨
+  </p>
+  <p>
+    If you would like to contribute, please feel free to do so! You can
+    click on the watchlist button to add a new recommendation.
+    <br /> To view the dramas I have already watched, press the "Viewed
+    Watchlist" button.
+  </p>
+  <a href="/watchlist" role="button">Watchlist ➕</a>
+  <a href="/alreadyWatchelist" role="button">Viewed Watchlist ✅</a>
 </main>
 
-<!-- /Main Site -->
+<%- include('include/_footer') %>

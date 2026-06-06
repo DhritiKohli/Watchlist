@@ -17,10 +17,14 @@
       <div><%= entry.date %></div>
       <div class="entryWatchlist"><%= entry.watchlist %></div>
       <div class="entryContent"><%= entry.content %></div>
+  <a href="/createEntry" role="button">Create Entry</a>
       <div>
-    </label>
-    <input type="submit" class="submit" value="submit" />
-  </div>
+        <a href="/editEntry/<%= entry.id %>" role="button"></a>
+          Edit
+        </a>
+      </div>
+    </div>
+    <% } %>
 </main>
 
 <!-- /Main Site -->
