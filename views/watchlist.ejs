@@ -8,14 +8,19 @@
   <div class="indexTopBar">
     <h1>K/C Drama Watchlist </h1>
     <% if (entries.length >0) { %>
-      for <% entry in entries %>
-      <div class="entry">
-        <p><%= entry%>
-        <button>Edit</button>
-        <button>Move to Viewed</button>
-        </p>
+      <% for (let entry of entries) { %>
+        <% if (entry.viewed === false) { %>
+        <div class="entry">
+          <p><%= entry.dramaName %></p>
+          <p><%= entry.comments %></p>
+          <p><%= entry.whereToWatch %></p>
+         <button class="edit-btn" data-id="<%= entry.id %>">Edit</button>
+          <button class="move-to-viewed-btn" data-id="<%= entry.id %>"> Move to Viewed</button>
+        </div>
+      <% } %>
+      <% } %>
     <% } else { %>
-      <p>No dramas added yet!</p>
+      <p>No dramas in the watchlist!</p>
     <% }
 
       %>
@@ -28,6 +33,7 @@
   <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <h2 id="modalTitle">Add a Drama</h2>
     <form id="addDramaForm">
+      <input type="hidden" class="dramaId" value="<%= drama._id %>">
       <label>
         Drama name (required)
         <input type="text" name="dramaName" id="dramaName" required />
@@ -39,6 +45,32 @@
       <label>
         Where to watch (optional)
         <input type="text" name="whereToWatch" id="whereToWatch" />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" id="modalSubmit">Submit</button>
+        <button type="button" id="modalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal for editing a drama -->
+<div id="editDramaModal" class="modal" style="display:none;">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <input type="hidden" id="editDramaId" />
+    <h2 id="modalTitle">Edit a Drama Entry</h2>
+    <form id="editDramaForm">
+      <label>
+        Drama name (required)
+        <input type="text" name="dramaName" id="dramaName" value="<%= entry.dramaName %>" required />
+      </label>
+      <label>
+        Comments
+        <textarea name="comments" id="comments"><%= entry.comments %></textarea>
+      </label>
+      <label>
+        Where to watch (optional)
+        <input type="text" name="whereToWatch" id="whereToWatch" value="<%= entry.whereToWatch %>" />
       </label>
       <div class="modal-actions">
         <button type="submit" id="modalSubmit">Submit</button>

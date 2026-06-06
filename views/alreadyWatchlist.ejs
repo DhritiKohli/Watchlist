@@ -20,8 +20,10 @@
         <% if (entry.viewed === true) { %>
           <div class="entry">
             <p><%= entry.dramaName %></p>
-            <button>Edit</button>
-            <button>Move to Watchlist</button>
+            <p><%= entry.comments %></p>
+            <p><%= entry.whereToWatch %></p>
+             <button class="edit-btn" data-id="<%= entry.id %>">Edit</button>
+            <button class="move-to-watchlist-btn" data-id="<%= entry.id %>">Move to Watchlist</button>
           </div>
         <% } %>
       <% } %>
@@ -51,6 +53,32 @@
       <label>
         Where to watch (optional)
         <input type="text" name="whereToWatch" id="whereToWatch" />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" id="modalSubmit">Submit</button>
+        <button type="button" id="modalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal for editing a drama -->
+<div id="editDramaModal" class="modal" style="display:none;">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <input type="hidden" class="dramaId" value="<%= drama._id %>">
+    <h2 id="modalTitle">Edit a Drama Entry</h2>
+    <form id="editDramaForm">
+      <label>
+        Drama name (required)
+        <input type="text" name="dramaName" id="dramaName" value="<%= entry.dramaName %>" required />
+      </label>
+      <label>
+        Comments
+        <textarea name="comments" id="comments"><%= entry.comments %></textarea>
+      </label>
+      <label>
+        Where to watch (optional)
+        <input type="text" name="whereToWatch" id="whereToWatch" value="<%= entry.whereToWatch %>" />
       </label>
       <div class="modal-actions">
         <button type="submit" id="modalSubmit">Submit</button>
