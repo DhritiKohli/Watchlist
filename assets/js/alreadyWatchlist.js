@@ -1,80 +1,101 @@
-/**
- *  contains client side javascript functions
- *  (primarily event handlers to fetch data from Node server)
- */
-
-// Get the submit button from the page
-const submitButton = document.querySelector("input.submit");
-const deleteButton = document.querySelector("input.delete");
-
-// When submit button is clicked, run this code
-submitButton.addEventListener("click", async () => {
-  // Get the entry ID from the hidden input field
-  const watchlistId = document.querySelector("input.watchlistId").value;
-
-  // Get the date value from the date input
-  const date = document.querySelector("input.date").value;
-
-  // Get all checked radio buttons for watchlist
-  const ecButtons = document.querySelectorAll("input.watchlist:checked");
-
-  // Get the first checked watchlist value, or null if none selected
-  const Watchlist =
-    ecButtons.length > 0 ? ecButtons[0].value : null;
-
-  // Get the content from the textarea
-  const content = document.querySelector("textarea.content").value;
-
-  // Create an object with all the form data
-  const entry = { date, watchlist: Watchlist, content };
-
-  // Send the data to the server to update the entry
-  const response = await fetch("/editEntry/" + watchlistId, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(entry),
-  });
-
-  if (response.ok) {
-    window.location = "/";
-  } else {
-    console.error("error updating entry");
+document.addEventListener('DOMContentLoaded', () => {
+  // Reusable helper: POST an entry to the server
+  async function sendEntry(entry) {
+    try {
+      const res = await fetch('/alreadyWatchlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry),
+      });
+      return res.ok;
+    } catch (err) {
+      console.error('sendEntry network error', err);
+      return false;
+    }
   }
-});
 
-deleteButton.addEventListener("click", async () => {
-  const watchlistId = document.querySelector("input.watchlistId").value;
+  // Keep the simple submitButton handler format you prefer.
+  // This block gathers fields, builds `entry`, and calls sendEntry.
+  const submitButton = document.querySelector('input.submit');
+  if (submitButton) {
+    submitButton.addEventListener('click', async () => {
+      const date = document.querySelector('input.date')?.value || new Date().toISOString().split('T')[0];
+      const dramaName = document.querySelector('input.dramaName')?.value || '';
+      const comments = document.querySelector('textarea.comments')?.value || '';
+      const where = document.querySelector('input.whereToWatch')?.value || '';
+      const viewed = true;
 
-  // Get the date value from the date input
-  const date = document.querySelector("input.date").value;
+      const entry = { date, dramaName, comments, where, viewed };
 
-  // Get all checked radio buttons for watchlist
-  const ecButtons = document.querySelectorAll("input.watchlist:checked");
+      const ok = await sendEntry(entry);
+      if (ok) {
+        window.location = '/';
+      } else {
+        console.error('error creating entry');
+        // optimistic UI: show the new item locally
+        addEntryToDOM(dramaName, comments);
+      }
+    });
+  }
 
-  // Get the first checked watchlist value, or null if none selected
-  const Watchlist =
-    ecButtons.length > 0 ? ecButtons[0].value : null;
+  // Modal add-drama form behavior (reuses sendEntry)
+  const addBtn = document.getElementById('addDramaBtn');
+  const modal = document.getElementById('addDramaModal');
+  const form = document.getElementById('addDramaForm');
+  const cancel = document.getElementById('modalCancel');
 
-  // Get the content from the textarea
-  const content = document.querySelector("textarea.content").value;
+  if (addBtn && modal && form) {
+    addBtn.addEventListener('click', () => {
+      modal.style.display = 'block';
+      document.getElementById('dramaName').focus();
+    });
 
-  // Create an object with all the form data
-  const entry = { date, watchlist: Watchlist, content };
+    cancel && cancel.addEventListener('click', () => {
+      form.reset();
+      modal.style.display = 'none';
+    });
 
-  // Sending data to the server to delete the entry
-  const response = await fetch("/editEntry/" + watchlistId, {
-    method: "DELETE",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(entry),
-  });
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const dramaName = document.getElementById('dramaName').value.trim();
+      const comments = document.getElementById('comments').value.trim();
+      const where = document.getElementById('whereToWatch').value.trim();
+      if (!dramaName) return;
 
-  if (response.ok) {
-    window.location = "/";
-  } else {
-    console.error("error deleting entry");
+      const date = new Date().toISOString().split('T')[0];
+      const viewed = true;
+      const entry = { date, dramaName, comments, where, viewed };
+
+      const ok = await sendEntry(entry);
+      if (ok) {
+        modal.style.display = 'none';
+        window.location.reload();
+      } else {
+        console.error('server error when creating entry');
+        addEntryToDOM(dramaName, comments);
+        modal.style.display = 'none';
+      }
+    });
+  }
+
+  // Safely append a new entry to the DOM using textContent (no innerHTML)
+  function addEntryToDOM(name, comments) {
+    const container = document.querySelector('.entries') || document.querySelector('.indexTopBar');
+    if (!container) return;
+
+    const div = document.createElement('div');
+    div.className = 'entry';
+
+    const title = document.createElement('div');
+    title.className = 'entryWatchlist';
+    title.textContent = name;
+
+    const contentEl = document.createElement('div');
+    contentEl.className = 'entryContent';
+    contentEl.textContent = comments;
+
+    div.appendChild(title);
+    div.appendChild(contentEl);
+    container.appendChild(div);
   }
 });

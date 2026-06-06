@@ -11,13 +11,57 @@
   <div>
     <input type="hidden" class="dramaId" value="<%= drama._id %>">
     
-    Watchlist Entry <textarea class="content">  <%= watchlist.content %></textarea>
-    </label>
-    <input type="submit" class="submit" value="submit" />
-    <input type="submit" class="delete" value="delete" />
+   <main>
+  <h1> Watchlist</h1>
+  <div class="indexTopBar">
+    <h1>Viewed K/C Drama List </h1>
+    <% if (entries.length >0) { %>
+      <% for (let entry of entries) { %>
+        <% if (entry.viewed === true) { %>
+          <div class="entry">
+            <p><%= entry.dramaName %></p>
+            <button>Edit</button>
+            <button>Move to Watchlist</button>
+          </div>
+        <% } %>
+      <% } %>
+    <% } else { %>
+      <p>No viewed dramas added yet :(</p>
+    <% }
+
+      %>
+    <button id="addDramaBtn">Add Drama</button>
+  </div>
+</main>
   </div>
 
-  <script src="/js/editEntry.js"></script>
+  <!-- Modal for adding a drama -->
+<div id="addDramaModal" class="modal" style="display:none;">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Add a Drama</h2>
+    <form id="addDramaForm">
+      <label>
+        Drama name (required)
+        <input type="text" name="dramaName" id="dramaName" required />
+      </label>
+      <label>
+        Comments
+        <textarea name="comments" id="comments"></textarea>
+      </label>
+      <label>
+        Where to watch (optional)
+        <input type="text" name="whereToWatch" id="whereToWatch" />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" id="modalSubmit">Submit</button>
+        <button type="button" id="modalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+  <script src="/js/alreadyWatchlist.js"></script>
 
   <!-- include footer -->
   <%- include('include/_footer') %>
