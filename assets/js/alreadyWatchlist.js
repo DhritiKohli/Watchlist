@@ -14,6 +14,20 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
+  async function updateEntry(id, update) {
+    try {
+      const res = await fetch(`/entry/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(update),
+      });
+      return res.ok;
+    } catch (err) {
+      console.error('updateEntry network error', err);
+      return false;
+    }
+  }
+
   // Optional direct submit button flow (keeps existing UX if present)
   const submitButton = document.querySelector('input.submit');
   if (submitButton) {
@@ -90,6 +104,19 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+  // Move the entry back to the watchlist.
+  document.addEventListener('click', async (e) => {
+    const button = e.target.closest('.move-to-watchlist-btn');
+    if (!button) return;
+
+    const id = button.dataset.id;
+    const ok = await updateEntry(id, { viewed: false });
+    if (ok) {
+      window.location.reload();
+    } else {
+      console.error('Error moving entry back to watchlist');
+    }
+  });
 
     // --- Edit button handling: open shared edit modal and populate fields ---
   const editModal = document.getElementById('editDramaModal');
@@ -129,7 +156,7 @@ document.addEventListener('DOMContentLoaded', () => {
       const comments = document.getElementById('editComments').value.trim();
       const where = document.getElementById('editWhereToWatch').value.trim();
       const date = new Date().toISOString().split('T')[0];
-      const viewed = false;
+      const viewed = true;
 
       const update = {
         date,

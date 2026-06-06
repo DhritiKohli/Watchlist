@@ -49,10 +49,8 @@ document.addEventListener('DOMContentLoaded', () => {
       const viewed = false;
       const dramaId = document.querySelector('input.dramaId')?.value || null;
 
-      // Construct payload compatible with both schema variants
       const payload = {
         date,
-        title: dramaName,
         watchlist: dramaName,
         content: comments + (where ? '\nWhere to watch: ' + where : ''),
         email: 'anonymous@example.com',
@@ -62,7 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const ok = await sendEntry(payload);
       if (ok) {
-        window.location = '/';
+        window.location = '/watchlist';
       } else {
         console.error('error creating entry');
         addEntryToDOM(dramaName, comments, where, dramaId);
@@ -99,7 +97,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const payload = {
         date,
-        title: dramaName,
         watchlist: dramaName,
         content: comments + (where ? '\nWhere to watch: ' + where : ''),
         email: 'anonymous@example.com',
@@ -117,6 +114,20 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
   }
+
+  // Move the entry to the viewed list.
+  document.addEventListener('click', async (e) => {
+    const button = e.target.closest('.move-to-viewed-btn');
+    if (!button) return;
+
+    const id = button.dataset.id;
+    const ok = await updateEntry(id, { viewed: true });
+    if (ok) {
+      window.location.reload();
+    } else {
+      console.error('Error moving entry to viewed');
+    }
+  });
 
   // --- Edit button handling: open shared edit modal and populate fields ---
   const editModal = document.getElementById('editDramaModal');
@@ -160,7 +171,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const update = {
         date,
-        title: dramaName,
         watchlist: dramaName,
         content: comments + (where ? '\nWhere to watch: ' + where : ''),
         viewed,
@@ -203,7 +213,12 @@ document.addEventListener('DOMContentLoaded', () => {
     editBtn.className = 'edit-btn';
     if (dramaId) editBtn.dataset.id = dramaId;
     editBtn.textContent = 'Edit';
+    const moveBtn = document.createElement('button');
+    moveBtn.className = 'move-to-viewed-btn';
+    if (dramaId) moveBtn.dataset.id = dramaId;
+    moveBtn.textContent = 'Move to Viewed';
     actions.appendChild(editBtn);
+    actions.appendChild(moveBtn);
 
     div.appendChild(title);
     div.appendChild(contentEl);

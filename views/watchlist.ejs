@@ -10,10 +10,20 @@
     <% if (entries && entries.length > 0) { %>
       <% entries.forEach(function(entry) { %>
         <% if (!entry.viewed) { %>
+        <% const dramaName = entry.watchlist || entry.dramaName || ''; %>
+        <% const rawContent = entry.content || entry.comments || ''; %>
+        <% const splitMarker = '\nWhere to watch: '; %>
+        <% let comments = rawContent; %>
+        <% let whereToWatch = entry.whereToWatch || ''; %>
+        <% if (!whereToWatch && rawContent.includes(splitMarker)) { %>
+          <% const parts = rawContent.split(splitMarker); %>
+          <% comments = parts[0]; %>
+          <% whereToWatch = parts.slice(1).join(splitMarker); %>
+        <% } %>
         <div class="entry" data-id="<%= entry._id %>">
-          <div class="entryWatchlist"><%= entry.dramaName %></div>
-          <div class="entryContent"><%= entry.comments %></div>
-          <div class="entryWhere"><%= entry.whereToWatch %></div>
+          <div class="entryWatchlist"><%= dramaName %></div>
+          <div class="entryContent"><%= comments %></div>
+          <div class="entryWhere"><%= whereToWatch %></div>
           <div class="entryActions">
             <button class="edit-btn" data-id="<%= entry._id %>">Edit</button>
             <button class="move-to-viewed-btn" data-id="<%= entry._id %>">Move to Viewed</button>

@@ -7,10 +7,6 @@ const schema = new mongoose.Schema({
     type: Date,
     required: true,
   },
-  email: {
-    type: String,
-    required: true,
-  },
   watchlist: {
     type: String,
     required: true,
@@ -18,6 +14,10 @@ const schema = new mongoose.Schema({
   content: {
     type: String,
     required: true,
+  },
+  viewed: {
+    type: Boolean,
+    default: false,
   },
 });
 
