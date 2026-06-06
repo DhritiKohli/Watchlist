@@ -1,0 +1,98 @@
+   <!-- include the header -->
+<%- include('include/_header') %>
+<!-- /include header-->
+
+<!-- Main Site -->
+<main>
+  <h1> Watchlist</h1>
+  <div class="indexTopBar">
+    <h1>K/C Drama Watchlist </h1>
+    <% if (entries && entries.length > 0) { %>
+      <% entries.forEach(function(entry) { %>
+        <% if (!entry.viewed) { %>
+        <% const dramaName = entry.watchlist || entry.dramaName || ''; %>
+        <% const rawContent = entry.content || entry.comments || ''; %>
+        <% const splitMarker = '\nWhere to watch: '; %>
+        <% let comments = rawContent; %>
+        <% let whereToWatch = entry.whereToWatch || ''; %>
+        <% if (!whereToWatch && rawContent.includes(splitMarker)) { %>
+          <% const parts = rawContent.split(splitMarker); %>
+          <% comments = parts[0]; %>
+          <% whereToWatch = parts.slice(1).join(splitMarker); %>
+        <% } %>
+        <div class="entry" data-id="<%= entry._id %>">
+          <div class="entryWatchlist"><%= dramaName %></div>
+          <div class="entryContent"><%= comments %></div>
+          <div class="entryWhere"><%= whereToWatch %></div>
+          <div class="entryActions">
+            <button class="edit-btn" data-id="<%= entry._id %>">Edit</button>
+            <button class="move-to-viewed-btn" data-id="<%= entry._id %>">Move to Viewed</button>
+          </div>
+        </div>
+      <% } %>
+      <% }) %>
+    <% } else { %>
+      <p>No dramas in the watchlist!</p>
+    <% }
+
+      %>
+    <button id="addDramaBtn">Add Drama</button>
+  </div>
+</main>
+
+<!-- Modal for adding a drama -->
+<div id="addDramaModal" class="modal" style="display:none;">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Add a Drama</h2>
+    <form id="addDramaForm">
+      <label>
+        Drama name (required)
+        <input type="text" name="dramaName" id="dramaName" required />
+      </label>
+      <label>
+        Comments
+        <textarea name="comments" id="comments"></textarea>
+      </label>
+      <label>
+        Where to watch (optional)
+        <input type="text" name="whereToWatch" id="whereToWatch" />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" id="modalSubmit">Submit</button>
+        <button type="button" id="modalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal for editing a drama (single shared modal) -->
+<div id="editDramaModal" class="modal" style="display:none;">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <h2 id="editModalTitle">Edit a Drama Entry</h2>
+    <form id="editDramaForm">
+      <input type="hidden" id="dramaId" />
+      <label>
+        Drama name (required)
+        <input type="text" name="editDramaName" id="editDramaName" required />
+      </label>
+      <label>
+        Comments
+        <textarea name="editComments" id="editComments"></textarea>
+      </label>
+      <label>
+        Where to watch (optional)
+        <input type="text" name="editWhereToWatch" id="editWhereToWatch" />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" id="editModalSubmit">Save</button>
+        <button type="button" id="editModalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="/js/watchlist.js"></script>
+
+<!-- include footer -->
+<%- include('include/_footer') %>
+<!-- /include footer -->
