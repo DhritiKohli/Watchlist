@@ -1,43 +1,28 @@
-<!-- include the header -->
 <%- include('include/_header') %>
-  <!-- /include header-->
 
-  <!-- Main Site -->
-  <main>
-    <h1>This is the list of the dramas you have watched</h1>
-  </main>
-  <!-- /Main Site -->
+<main>
+  <h1>Viewed K/C Drama List</h1>
 
-  <div>
-    <input type="hidden" class="dramaId" value="<%= drama._id %>">
-    
-   <main>
-  <h1> Watchlist</h1>
   <div class="indexTopBar">
-    <h1>Viewed K/C Drama List </h1>
-    <% if (entries.length >0) { %>
-      <% for (let entry of entries) { %>
-        <% if (entry.viewed === true) { %>
-          <div class="entry">
-            <p><%= entry.dramaName %></p>
-            <p><%= entry.comments %></p>
-            <p><%= entry.whereToWatch %></p>
-             <button class="edit-btn" data-id="<%= entry.id %>">Edit</button>
-            <button class="move-to-watchlist-btn" data-id="<%= entry.id %>">Move to Watchlist</button>
+    <% if (entries && entries.length > 0) { %>
+      <% entries.forEach(function(entry) { %>
+        <div class="entry" data-id="<%= entry._id %>">
+          <div class="entryWatchlist"><%= entry.dramaName %></div>
+          <div class="entryContent"><%= entry.comments %></div>
+          <div class="entryWhere"><%= entry.whereToWatch %></div>
+          <div class="entryActions">
+            <button class="edit-btn" data-id="<%= entry._id %>">Edit</button>
           </div>
-        <% } %>
-      <% } %>
+        </div>
+      <% }) %>
     <% } else { %>
       <p>No viewed dramas added yet :(</p>
-    <% }
+    <% } %>
 
-      %>
     <button id="addDramaBtn">Add Drama</button>
   </div>
 </main>
-  </div>
 
-  <!-- Modal for adding a drama -->
 <div id="addDramaModal" class="modal" style="display:none;">
   <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
     <h2 id="modalTitle">Add a Drama</h2>
@@ -62,35 +47,31 @@
   </div>
 </div>
 
-<!-- Modal for editing a drama -->
 <div id="editDramaModal" class="modal" style="display:none;">
-  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-    <input type="hidden" class="dramaId" value="<%= drama._id %>">
-    <h2 id="modalTitle">Edit a Drama Entry</h2>
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
+    <h2 id="editModalTitle">Edit a Drama Entry</h2>
     <form id="editDramaForm">
+      <input type="hidden" id="editDramaId" />
       <label>
         Drama name (required)
-        <input type="text" name="dramaName" id="dramaName" value="<%= entry.dramaName %>" required />
+        <input type="text" name="editDramaName" id="editDramaName" required />
       </label>
       <label>
         Comments
-        <textarea name="comments" id="comments"><%= entry.comments %></textarea>
+        <textarea name="editComments" id="editComments"></textarea>
       </label>
       <label>
         Where to watch (optional)
-        <input type="text" name="whereToWatch" id="whereToWatch" value="<%= entry.whereToWatch %>" />
+        <input type="text" name="editWhereToWatch" id="editWhereToWatch" />
       </label>
       <div class="modal-actions">
-        <button type="submit" id="modalSubmit">Submit</button>
-        <button type="button" id="modalCancel">Cancel</button>
+        <button type="submit" id="editModalSubmit">Save</button>
+        <button type="button" id="editModalCancel">Cancel</button>
       </div>
     </form>
   </div>
 </div>
 
+<script src="/js/alreadyWatchlist.js"></script>
 
-  <script src="/js/alreadyWatchlist.js"></script>
-
-  <!-- include footer -->
-  <%- include('include/_footer') %>
-    <!-- /include footer -->
+<%- include('include/_footer') %>
