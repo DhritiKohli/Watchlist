@@ -1,32 +1,108 @@
 /**
- *  contains client side javascript functions
- *  (primarily event handlers to fetch data from Node server)
+ * Client-side handlers for the Watchlist page.
+ * - provides a simple `submitButton` flow (as requested)
+ * - adds a modal form for adding dramas
+ * - keeps the code readable and DRY (no duplicated fetch logic)
  */
 
-const submitButton = document.querySelector("input.submit");
-submitButton.addEventListener("click", async () => {
-  const date = document.querySelector("input.date").value;
-  // a more sophisticated select that selects all input elements of
-  //  a class watchlist that are checked
-  const ecButtons = document.querySelectorAll("input.watchlist:checked");
-  // if the length of the ecButtons array is greater than 0, then assign the [0] index value to
-  //    const Watchlist
-  const Watchlist =
-    ecButtons.length > 0 ? ecButtons[0].value : null;
-  const content = document.querySelector("textarea.content").value;
-  // set a break-point here
-  const entry = { date, watchlist: Watchlist, content }; // if the name of the property is the same as the name of the variable, you don't need to do {date : date}
-  //                property short-hand
-  const response = await fetch("/createEntry", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(entry),
-  });
-  if (response.ok) {
-    window.location = "/";
-  } else {
-    console.error("error creating entry");
+document.addEventListener('DOMContentLoaded', () => {
+  // Reusable helper: POST an entry to the server
+  async function sendEntry(entry) {
+    try {
+      const res = await fetch('/watchlist', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(entry),
+      });
+      return res.ok;
+    } catch (err) {
+      console.error('sendEntry network error', err);
+      return false;
+    }
+  }
+
+  // Keep the simple submitButton handler format you prefer.
+  // This block gathers fields, builds `entry`, and calls sendEntry.
+  const submitButton = document.querySelector('input.submit');
+  if (submitButton) {
+    submitButton.addEventListener('click', async () => {
+      const date = document.querySelector('input.date')?.value || new Date().toISOString().split('T')[0];
+      const dramaName = document.querySelector('input.dramaName')?.value || '';
+      const comments = document.querySelector('textarea.comments')?.value || '';
+      const where = document.querySelector('input.whereToWatch')?.value || '';
+      const viewed = false;
+
+      const entry = { date, dramaName, comments, where, viewed };
+
+      const ok = await sendEntry(entry);
+      if (ok) {
+        window.location = '/';
+      } else {
+        console.error('error creating entry');
+        // optimistic UI: show the new item locally
+        addEntryToDOM(dramaName, comments);
+      }
+    });
+  }
+
+  // Modal add-drama form behavior (reuses sendEntry)
+  const addBtn = document.getElementById('addDramaBtn');
+  const modal = document.getElementById('addDramaModal');
+  const form = document.getElementById('addDramaForm');
+  const cancel = document.getElementById('modalCancel');
+
+  if (addBtn && modal && form) {
+    addBtn.addEventListener('click', () => {
+      modal.style.display = 'block';
+      document.getElementById('dramaName').focus();
+    });
+
+    cancel && cancel.addEventListener('click', () => {
+      form.reset();
+      modal.style.display = 'none';
+    });
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const dramaName = document.getElementById('dramaName').value.trim();
+      const comments = document.getElementById('comments').value.trim();
+      const where = document.getElementById('whereToWatch').value.trim();
+      if (!dramaName) return;
+
+      const date = new Date().toISOString().split('T')[0];
+      const viewed = false;
+      const entry = { date, dramaName, comments, where, viewed };
+
+      const ok = await sendEntry(entry);
+      if (ok) {
+        modal.style.display = 'none';
+        window.location.reload();
+      } else {
+        console.error('server error when creating entry');
+        addEntryToDOM(dramaName, comments);
+        modal.style.display = 'none';
+      }
+    });
+  }
+
+  // Safely append a new entry to the DOM using textContent (no innerHTML)
+  function addEntryToDOM(name, comments) {
+    const container = document.querySelector('.entries') || document.querySelector('.indexTopBar');
+    if (!container) return;
+
+    const div = document.createElement('div');
+    div.className = 'entry';
+
+    const title = document.createElement('div');
+    title.className = 'entryWatchlist';
+    title.textContent = name;
+
+    const contentEl = document.createElement('div');
+    contentEl.className = 'entryContent';
+    contentEl.textContent = comments;
+
+    div.appendChild(title);
+    div.appendChild(contentEl);
+    container.appendChild(div);
   }
 });

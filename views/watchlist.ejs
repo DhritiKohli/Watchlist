@@ -7,29 +7,48 @@
   <h1> Watchlist</h1>
   <div class="indexTopBar">
     <h1>K/C Drama Watchlist </h1>
-    <a href="/createEntry" role="button">Create Entry</a>
+    <% if (entries.length >0) { %>
+      for <% entry in entries %>
+      <div class="entry">
+        <p><%= entry%>
+        <button>Edit</button>
+        <button>Move to Viewed</button>
+        </p>
+    <% } else { %>
+      <p>No dramas added yet!</p>
+    <% }
+
+      %>
+    <button id="addDramaBtn">Add Drama</button>
   </div>
-  <div>
-    <label>Date <input type="date" class="date" /> </label>
-   <div class="entries">
-    <% for(let entry of entries) { %>
-    <div class="entry">
-      <div><%= entry.date %></div>
-      <div class="entryWatchlist"><%= entry.watchlist %></div>
-      <div class="entryContent"><%= entry.content %></div>
-  <a href="/createEntry" role="button">Create Entry</a>
-      <div>
-        <a href="/editEntry/<%= entry.id %>" role="button"></a>
-          Edit
-        </a>
-      </div>
-    </div>
-    <% } %>
 </main>
 
-<!-- /Main Site -->
+<!-- Modal for adding a drama -->
+<div id="addDramaModal" class="modal" style="display:none;">
+  <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <h2 id="modalTitle">Add a Drama</h2>
+    <form id="addDramaForm">
+      <label>
+        Drama name (required)
+        <input type="text" name="dramaName" id="dramaName" required />
+      </label>
+      <label>
+        Comments
+        <textarea name="comments" id="comments"></textarea>
+      </label>
+      <label>
+        Where to watch (optional)
+        <input type="text" name="whereToWatch" id="whereToWatch" />
+      </label>
+      <div class="modal-actions">
+        <button type="submit" id="modalSubmit">Submit</button>
+        <button type="button" id="modalCancel">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
 
-<script src="/js/createEntry.js"></script>
+<script src="/js/watchlist.js"></script>
 
 <!-- include footer -->
 <%- include('include/_footer') %>
