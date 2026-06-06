@@ -2,7 +2,7 @@
 <main>
   <div class="indexTopBar">
     <img src="img/SE-GitHub-image.png" alt="Huskie Code Logo" />
-    <h1>Employability Competencies Journal</h1>
+    <h1> Watchlist</h1>
     <a href="/createEntry" role="button">Create Entry</a>
   </div>
 
@@ -10,7 +10,7 @@
     <% for(let entry of entries) { %>
     <div class="entry">
       <div><%= entry.date %></div>
-      <div class="entryCompetency"><%= entry.competency %></div>
+      <div class="entryWatchlist"><%= entry.watchlist %></div>
       <div class="entryContent"><%= entry.content %></div>
       <div>
         <a href="/editEntry/<%= entry.id %>" role="button" class="secondary">

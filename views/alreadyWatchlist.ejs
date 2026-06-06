@@ -4,29 +4,14 @@
 
   <!-- Main Site -->
   <main>
-    <h1>This is the Edit Entry Page!</h1>
+    <h1>This is the list of the dramas you have watched</h1>
   </main>
   <!-- /Main Site -->
 
   <div>
-    <input type="hidden" class="journalId" value="<%= journal._id %>">
-    <label>Date <input type="date" class="date" value="<%= journal.date.toISOString().split('T')[0] %>" /></label>
-    <fieldset>
-      <legend>
-
-        Employability Competencies <% for (let competency of comps) { %>
-          <label>
-            <% if (competency===journal.competency) { %>
-              <input type="radio" class="competency" name="competency" value="<%= competency %>" checked>
-              <% } else { %>
-                <input type="radio" class="competency" name="competency" value="<%= competency %>">
-                <% } %>
-                  <%= competency %>
-          </label>
-          <% } %>
-      </legend>
-    </fieldset>
-    Journal Entry <textarea class="content">  <%= journal.content %></textarea>
+    <input type="hidden" class="dramaId" value="<%= drama._id %>">
+    
+    Watchlist Entry <textarea class="content">  <%= watchlist.content %></textarea>
     </label>
     <input type="submit" class="submit" value="submit" />
     <input type="submit" class="delete" value="delete" />

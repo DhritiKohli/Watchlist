@@ -4,27 +4,20 @@
 
 <!-- Main Site -->
 <main>
-  <h1>Employability Competencies Journal</h1>
-
+  <h1> Watchlist</h1>
+  <div class="indexTopBar">
+    <h1>K/C Drama Watchlist </h1>
+    <a href="/createEntry" role="button">Create Entry</a>
+  </div>
   <div>
     <label>Date <input type="date" class="date" /> </label>
-    <fieldset>
-      <legend>
-        Employability Competencies <% for(let competency of comps) { %>
-        <label>
-          <input
-            type="radio"
-            class="competency"
-            name="competency"
-            value="<%= competency %>"
-          />
-          <%= competency %>
-        </label>
-        <% } %>
-      </legend>
-    </fieldset>
-    <label
-      >Journal Entry <textarea class="content"> my journal entry</textarea>
+   <div class="entries">
+    <% for(let entry of entries) { %>
+    <div class="entry">
+      <div><%= entry.date %></div>
+      <div class="entryWatchlist"><%= entry.watchlist %></div>
+      <div class="entryContent"><%= entry.content %></div>
+      <div>
     </label>
     <input type="submit" class="submit" value="submit" />
   </div>

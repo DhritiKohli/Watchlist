@@ -11,7 +11,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  competency: {
+  watchlist: {
     type: String,
     required: true,
   },

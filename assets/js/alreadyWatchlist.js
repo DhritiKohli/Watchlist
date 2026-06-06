@@ -10,26 +10,26 @@ const deleteButton = document.querySelector("input.delete");
 // When submit button is clicked, run this code
 submitButton.addEventListener("click", async () => {
   // Get the entry ID from the hidden input field
-  const journalId = document.querySelector("input.journalId").value;
+  const watchlistId = document.querySelector("input.watchlistId").value;
 
   // Get the date value from the date input
   const date = document.querySelector("input.date").value;
 
-  // Get all checked radio buttons for competency
-  const ecButtons = document.querySelectorAll("input.competency:checked");
+  // Get all checked radio buttons for watchlist
+  const ecButtons = document.querySelectorAll("input.watchlist:checked");
 
-  // Get the first checked competency value, or null if none selected
-  const employabilityCompetency =
+  // Get the first checked watchlist value, or null if none selected
+  const Watchlist =
     ecButtons.length > 0 ? ecButtons[0].value : null;
 
   // Get the content from the textarea
   const content = document.querySelector("textarea.content").value;
 
   // Create an object with all the form data
-  const entry = { date, competency: employabilityCompetency, content };
+  const entry = { date, watchlist: Watchlist, content };
 
   // Send the data to the server to update the entry
-  const response = await fetch("/editEntry/" + journalId, {
+  const response = await fetch("/editEntry/" + watchlistId, {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",
@@ -45,26 +45,26 @@ submitButton.addEventListener("click", async () => {
 });
 
 deleteButton.addEventListener("click", async () => {
-  const journalId = document.querySelector("input.journalId").value;
+  const watchlistId = document.querySelector("input.watchlistId").value;
 
   // Get the date value from the date input
   const date = document.querySelector("input.date").value;
 
-  // Get all checked radio buttons for competency
-  const ecButtons = document.querySelectorAll("input.competency:checked");
+  // Get all checked radio buttons for watchlist
+  const ecButtons = document.querySelectorAll("input.watchlist:checked");
 
-  // Get the first checked competency value, or null if none selected
-  const employabilityCompetency =
+  // Get the first checked watchlist value, or null if none selected
+  const Watchlist =
     ecButtons.length > 0 ? ecButtons[0].value : null;
 
   // Get the content from the textarea
   const content = document.querySelector("textarea.content").value;
 
   // Create an object with all the form data
-  const entry = { date, competency: employabilityCompetency, content };
+  const entry = { date, watchlist: Watchlist, content };
 
   // Sending data to the server to delete the entry
-  const response = await fetch("/editEntry/" + journalId, {
+  const response = await fetch("/editEntry/" + watchlistId, {
     method: "DELETE",
     headers: {
       "Content-Type": "application/json",
