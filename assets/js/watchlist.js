@@ -133,9 +133,18 @@ document.addEventListener('DOMContentLoaded', () => {
   const editModal = document.getElementById('editDramaModal');
   const editForm = document.getElementById('editDramaForm');
   const editCancel = document.getElementById('editModalCancel');
+  const editDramaId = document.getElementById('editDramaId');
+  const editDramaName = document.getElementById('editDramaName');
+  const editComments = document.getElementById('editComments');
+  const editWhereToWatch = document.getElementById('editWhereToWatch');
+
+  if (!editModal || !editForm || !editCancel || !editDramaId || !editDramaName || !editComments || !editWhereToWatch) {
+    console.error('Edit modal markup is missing required elements');
+  }
 
   // delegate clicks on edit buttons
   document.addEventListener('click', (e) => {
+    if (!editModal || !editForm || !editDramaId || !editDramaName || !editComments || !editWhereToWatch) return;
     const btn = e.target.closest('.edit-btn');
     if (!btn) return;
     const id = btn.dataset.id;
@@ -143,10 +152,10 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!row) return;
 
     // populate edit form fields from the row
-    document.getElementById('editDramaId').value = id;
-    document.getElementById('editDramaName').value = row.querySelector('.entryWatchlist')?.textContent || '';
-    document.getElementById('editComments').value = row.querySelector('.entryContent')?.textContent || '';
-    document.getElementById('editWhereToWatch').value = row.querySelector('.entryWhere')?.textContent || '';
+    editDramaId.value = id;
+    editDramaName.value = row.querySelector('.entryWatchlist')?.textContent || '';
+    editComments.value = row.querySelector('.entryContent')?.textContent || '';
+    editWhereToWatch.value = row.querySelector('.entryWhere')?.textContent || '';
 
     // show modal
     editModal.style.display = 'block';
@@ -162,10 +171,10 @@ document.addEventListener('DOMContentLoaded', () => {
   if (editForm) {
     editForm.addEventListener('submit', async (e) => {
       e.preventDefault();
-      const dramaId = document.getElementById('editDramaId').value;
-      const dramaName = document.getElementById('editDramaName').value.trim();
-      const comments = document.getElementById('editComments').value.trim();
-      const where = document.getElementById('editWhereToWatch').value.trim();
+      const dramaId = editDramaId?.value || '';
+      const dramaName = editDramaName?.value.trim() || '';
+      const comments = editComments?.value.trim() || '';
+      const where = editWhereToWatch?.value.trim() || '';
       const date = new Date().toISOString().split('T')[0];
       const viewed = false;
 
