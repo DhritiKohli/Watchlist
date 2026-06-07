@@ -105,13 +105,11 @@ main { padding: 12px 20px 20px; display: grid; gap: 16px; justify-items: stretch
   align-content: start;
 }
 
-.already-watchlist-page .indexTopBar {
-  gap: 10px;
-}
 
+/* FIX: Removed 'max-width: 100%' so it relies natively on the base '.add-drama-card' properties */
 .already-watchlist-page .add-drama-card {
   margin-top: 0;
-  max-width: 100%;
+
 }
 
 /* ==========================================
@@ -180,9 +178,10 @@ header { padding: 24px 0 8px; display: flex; align-items: center; justify-conten
 .indexTopBar { 
   display: grid; 
   gap: 14px; 
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+ grid-template-columns: repeat(auto-fit, minmax(250px, 320px)); 
   grid-auto-rows: auto; 
   width: 100%; 
+  justify-content: start;
 }
 
 
