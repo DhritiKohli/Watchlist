@@ -149,9 +149,9 @@ main {
 
 h1,
 h2,
-h3,
-p {
+h3 {
 	margin-top: 0;
+    text-align: left;
 }
 
 p {
