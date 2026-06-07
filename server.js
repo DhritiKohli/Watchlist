@@ -27,6 +27,7 @@ connectDB();
 app.set("view engine", "ejs");
 
 // load assets
+app.use("/assets", express.static("assets"));
 app.use("/css", express.static("assets/css")); // middleware and referring to the client's perspective
 app.use("/img", express.static("assets/img"));
 app.use("/js", express.static("assets/js"));
