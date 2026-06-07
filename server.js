@@ -8,6 +8,7 @@ const http = require("http");
 
 // import the express module, which exports the express function
 const express = require("express");
+const path = require("path");
 
 // invoke the express function to create an express application
 const app = express();
@@ -27,10 +28,11 @@ connectDB();
 app.set("view engine", "ejs");
 
 // load assets
-app.use("/assets", express.static("assets"));
-app.use("/css", express.static("assets/css")); // middleware and referring to the client's perspective
-app.use("/img", express.static("assets/img"));
-app.use("/js", express.static("assets/js"));
+const assetsDir = path.join(__dirname, "assets");
+app.use("/assets", express.static(assetsDir));
+app.use("/css", express.static(path.join(assetsDir, "css"))); // middleware and referring to the client's perspective
+app.use("/img", express.static(path.join(assetsDir, "img")));
+app.use("/js", express.static(path.join(assetsDir, "js")));
 
 // create the HTTP server
 const server = http.createServer(app);
