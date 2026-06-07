@@ -81,9 +81,38 @@ header, footer, main {
 .welcome-card {  max-width: 860px; display: grid; padding: clamp(24px, 4vw, 42px); backdrop-filter: blur(12px); margin-top: 5%;  }
 .welcome-card h1 { font-size: clamp(30px, 35px, 41px); margin-bottom: 16px; text-align: center; color: var(--muted) }
 .welcome-card p { font-size: clamp(18px, 22px, 25px); }
-.add-drama-card { margin-top: 18px; padding: 18px; }
-.entry-card { padding: 22px 24px; display: grid; gap: 14px; }
-main { padding: 20px; place-items: center; display: grid; gap: 24px; }
+.add-drama-card {text-align: center;display: grid; padding: 22px 24px;
+  gap: 14px; 
+  width: 100%; 
+  max-width: 360px; 
+  height: 100%; }
+.entry-card { padding: 22px 24px; display: grid; gap: 14px; width: 100%; height: 100%;}
+main { padding: 12px 20px 20px; display: grid; gap: 16px; justify-items: stretch; align-content: start; }
+.home-page { justify-items: center; }
+.home-page .welcome-card { width: min(860px, 100%); margin-inline: auto; }
+
+
+/* FIX: Forces cards to hug the top tightly and reduces general layout gaps */
+.watchlist-page { 
+  padding-top: 6px; 
+  gap: 8px; 
+  align-content: start; 
+}
+
+.already-watchlist-page {
+  padding-top: 6px;
+  gap: 8px;
+  align-content: start;
+}
+
+.already-watchlist-page .indexTopBar {
+  gap: 10px;
+}
+
+.already-watchlist-page .add-drama-card {
+  margin-top: 0;
+  max-width: 100%;
+}
 
 /* ==========================================
    3. REUSABLE ACTIVE INTERFACES (COMPILED BUTTONS)
@@ -102,6 +131,7 @@ main { padding: 20px; place-items: center; display: grid; gap: 24px; }
   border-radius: 999px;
   transition: transform 160ms ease, box-shadow 160ms ease, background-color 160ms ease; 
 }
+
 
 /* Compiled Primary Active Actions */
 .card-button, #addDramaBtn, .entryActions .edit-btn, .modal-actions #modalSubmit, .modal-actions #editModalSubmit { 
@@ -146,11 +176,48 @@ header { padding: 24px 0 8px; display: flex; align-items: center; justify-conten
 /* ==========================================
    5. COMPONENT DOM VIEWS
    ========================================== */
-.indexTopBar { display: grid; gap: 18px; }
-.indexTopBar > h1 { margin-bottom: 6px; }
-.entryField { display: grid; gap: 6px; }
+/* FIX: Changed grid-auto-rows from 1fr to auto to prevent h1 row from expanding */
+.indexTopBar { 
+  display: grid; 
+  gap: 14px; 
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
+  grid-auto-rows: auto; 
+  width: 100%; 
+}
+
+
+/* FIX: Erased the margin-bottom entirely to ensure zero heading bleedout down to the grid items */
+.indexTopBar > h1 { 
+  grid-column: 1 / -1; 
+  margin-bottom: 0 !important; 
+}
+
+/* Ensure long comment/where text doesn't force uneven heights */
+.entryContent, .entryWhere {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-clamp: 4;
+  -webkit-line-clamp: 4; /* show up to 4 lines */
+  font-size: clamp(0.95rem, 1vw, 1rem);
+}
+.entryField { display: grid; gap: 6px; min-width: 0; }
 .entryLabel { font-size: 0.82rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent-strong); }
 .entryWatchlist { font-size: 20px; font-weight: 600; color: var(--muted); }
+.entryWatchlist, .entryContent, .entryWhere {
+  max-width: 100%;
+  min-width: 0;
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
+.entry-card{
+  padding: 22px 24px; 
+  display: grid; 
+  gap: 14px; 
+  width: 100%; 
+  max-width: 360px; 
+  height: 100%;
+}
 .entryContent, .entryWhere { color: var(--muted); line-height: 1.7; white-space: pre-wrap; }
 .entryActions, .card-actions { display: flex; flex-wrap: wrap; gap: 12px; padding-top: 6px; }
 
