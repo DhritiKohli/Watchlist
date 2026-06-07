@@ -1,5 +1,12 @@
     <footer>
-      <p id="copyRight">&copy; <%= new Date().getFullYear() %> DK's Watchlist</p>
+      <p>&copy; <%= new Date().getFullYear() %> DK's Watchlist</p>
     </footer>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        if (window.twemoji) {
+          twemoji.parse(document.body, { folder: 'svg', ext: '.svg' });
+        }
+      });
+    </script>
   </body>
 </html>

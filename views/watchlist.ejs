@@ -4,6 +4,7 @@
 
 <!-- Main Site -->
 <main>
+  <h1> Watchlist</h1>
   <div class="indexTopBar">
     <h1>K/C Drama Watchlist </h1>
     <% if (entries && entries.length > 0) { %>
@@ -19,24 +20,15 @@
           <% comments = parts[0]; %>
           <% whereToWatch = parts.slice(1).join(splitMarker); %>
         <% } %>
-        <article class="entry entry-card" data-id="<%= entry._id %>">
-          <div class="entryField">
-            <span class="entryLabel">Drama:</span>
-            <div class="entryWatchlist"><%= dramaName %></div>
-          </div>
-          <div class="entryField">
-            <span class="entryLabel">Comments:</span>
-            <div class="entryContent"><%= comments %></div>
-          </div>
-          <div class="entryField">
-            <span class="entryLabel">Where to watch:</span>
-            <div class="entryWhere"><%= whereToWatch %></div>
-          </div>
+        <div class="entry" data-id="<%= entry._id %>">
+          <div class="entryWatchlist"><%= dramaName %></div>
+          <div class="entryContent"><%= comments %></div>
+          <div class="entryWhere"><%= whereToWatch %></div>
           <div class="entryActions">
             <button class="edit-btn" data-id="<%= entry._id %>">Edit</button>
             <button class="move-to-viewed-btn" data-id="<%= entry._id %>">Move to Viewed</button>
           </div>
-        </article>
+        </div>
       <% } %>
       <% }) %>
     <% } else { %>
@@ -44,9 +36,7 @@
     <% }
 
       %>
-    <div class="add-drama-card card-shell">
-      <button id="addDramaBtn">Add Drama</button>
-    </div>
+    <button id="addDramaBtn">Add Drama</button>
   </div>
 </main>
 
@@ -80,7 +70,7 @@
   <div class="modal-content" role="dialog" aria-modal="true" aria-labelledby="editModalTitle">
     <h2 id="editModalTitle">Edit a Drama Entry</h2>
     <form id="editDramaForm">
-      <input type="hidden" id="editDramaId" />
+      <input type="hidden" id="dramaId" />
       <label>
         Drama name (required)
         <input type="text" name="editDramaName" id="editDramaName" required />

@@ -16,32 +16,21 @@
           <% comments = parts[0]; %>
           <% whereToWatch = parts.slice(1).join(splitMarker); %>
         <% } %>
-        <article class="entry entry-card" data-id="<%= entry._id %>">
-          <div class="entryField">
-            <span class="entryLabel">Drama:</span>
-            <div class="entryWatchlist"><%= dramaName %></div>
-          </div>
-          <div class="entryField">
-            <span class="entryLabel">Comments:</span>
-            <div class="entryContent"><%= comments %></div>
-          </div>
-          <div class="entryField">
-            <span class="entryLabel">Where to watch:</span>
-            <div class="entryWhere"><%= whereToWatch %></div>
-          </div>
+        <div class="entry" data-id="<%= entry._id %>">
+          <div class="entryWatchlist"><%= dramaName %></div>
+          <div class="entryContent"><%= comments %></div>
+          <div class="entryWhere"><%= whereToWatch %></div>
           <div class="entryActions">
             <button class="edit-btn" data-id="<%= entry._id %>">Edit</button>
             <button class="move-to-watchlist-btn" data-id="<%= entry._id %>">Move to Watchlist</button>
           </div>
-        </article>
+        </div>
       <% }) %>
     <% } else { %>
       <p>No viewed dramas added yet :(</p>
     <% } %>
 
-    <div class="add-drama-card card-shell">
-      <button id="addDramaBtn">Add Drama</button>
-    </div>
+    <button id="addDramaBtn">Add Drama</button>
   </div>
 </main>
 
